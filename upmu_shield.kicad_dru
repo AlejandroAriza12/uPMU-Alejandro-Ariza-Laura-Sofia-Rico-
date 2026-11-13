@@ -1,0 +1,57 @@
+(version 1)
+# =====================================================================================
+#  Reglas de diseño — Shield µPMU v3 (UNA CAPA: cobre solo en B.Cu, sin vías)
+#  Base: plantilla LCFI Uniandes (KiCad 11-2022). Cada regla declara un valor MAYOR que el
+#  mínimo del LCFI para dar holgura a la fabricación (mínimo LCFI entre paréntesis).
+# =====================================================================================
+
+# --- Una sola capa: nada de cobre en F.Cu y ninguna vía ---
+#     F.Cu es la "capa de puentes": solo lleva los alambres de GND W1 y W2 (no se fabrica; se sueldan a mano)
+(rule "una_capa_sin_cobre_en_F.Cu"
+	(layer F.Cu)
+	(condition "A.Type == 'Zone' || (A.Type == 'Track' && A.NetName != 'GND')")
+	(constraint disallow track zone))
+(rule "una_capa_sin_vias"
+	(constraint disallow via))
+
+# --- Pistas: 0,60 mm mínimo (LCFI 0,254) ---
+(rule "ancho_pista"
+	(condition "A.Type == 'Track'")
+	(constraint track_width (min 0.6mm) (opt 0.8mm)))
+
+# --- Separación general cobre-cobre: 0,60 mm (LCFI 0,30) ---
+(rule "holgura_general"
+	(constraint clearance (min 0.6mm)))
+
+# --- Plano de GND: 0,80 mm (LCFI 0,508) ---
+(rule "holgura_plano_gnd"
+	(condition "A.Type == 'Zone' || B.Type == 'Zone'")
+	(constraint clearance (min 0.8mm)))
+
+# --- Entre pads: 0,50 mm (LCFI pad-pad 0,5). Solo ocurre entre pines vecinos de un mismo
+#     componente de paso 2,54 mm; el valor real en la placa es >= 0,54 mm ---
+(rule "pad_a_pad_paso_2.54"
+	(condition "A.Type == 'Pad' && B.Type == 'Pad'")
+	(constraint clearance (min 0.5mm)))
+
+# --- Taladros ---
+(rule "taladro_minimo"
+	(constraint hole_size (min 0.8mm)))
+(rule "taladro_a_cobre"
+	(constraint hole_clearance (min 0.6mm)))
+(rule "taladro_a_taladro"
+	(constraint hole_to_hole (min 1.0mm)))
+(rule "anillo_de_cobre"
+	(constraint annular_width (min 0.5mm)))
+
+# --- Borde de la placa: 1,50 mm (LCFI 0,5) ---
+(rule "cobre_al_borde"
+	(constraint edge_clearance (min 1.5mm)))
+
+# --- Marco de corte (pedido del LCFI): línea de 0,3 mm por dentro del contorno (su borde exterior coincide con el borde) en B.Cu, B.Mask y F.Silkscreen.
+#     Va justo en el borde a propósito, por eso queda exento de la regla "cobre_al_borde".
+#     Es un dibujo sin red: no toca ninguna pista ni el plano de GND (quedan a más de 1,2 mm). ---
+(rule "marco_de_corte"
+	(condition "A.Type == 'Graphic' && (A.Layer == 'B.Cu' || A.Layer == 'B.Mask' || A.Layer == 'F.Silkscreen' || A.Layer == 'F.SilkS')")
+	(constraint edge_clearance (min 0mm))
+	(severity ignore))

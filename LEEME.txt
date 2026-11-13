@@ -1,0 +1,63 @@
+SHIELD µPMU v5 — UNA CAPA (segunda revisión del LCFI) — Alejandro Ariza y Laura Sofía Rico (TallerPot)
+==========================================================================================================
+
+QUÉ CAMBIÓ RESPECTO A LA v4 (el circuito es el mismo; la verificación esquemático = PCB sigue dando TODO OK)
+1. Archivo de perforación (upmu_shield.drl), en el formato Excellon clásico:
+   - un solo archivo con los 90 huecos (40 de 0,8 mm, 46 de 1,0 mm y 4 de 3,2 mm), todos SIN metalizar;
+   - pulgadas, formato 2.4, ceros a la izquierda suprimidos, sin punto decimal (el mismo estilo que sale de Eagle);
+   - origen (0,0) en la esquina inferior izquierda de la placa, igual que los gerbers: todas las coordenadas son
+     positivas (X de 4 a 96 mm, Y de 4 a 76 mm). Antes salían negativas y en formato decimal;
+   - sin los comentarios de atributos de KiCad (líneas "; #@!").
+   Comprobado: los 90 huecos caen en el centro de sus 90 pads (error máximo 0,002 mm) y con el diámetro correcto.
+2. Fiducias rellenas: en la capa de referencias (serigrafía) cada hueco de tornillo tiene ahora un CÍRCULO RELLENO
+   de 4,8 mm (antes era un círculo vacío con una cruz). En cobre es un disco de 4,8 mm y en la máscara una abertura
+   del mismo tamaño; las tres capas coinciden con el hueco de 3,2 mm.
+3. Llegada de las pistas a los pads (los óvalos rojos y todos los demás pads de la placa):
+   - toda pista llega al CENTRO del pad, sin tramos sueltos ni escalones;
+   - entra en línea recta, HORIZONTAL o VERTICAL (nunca en diagonal ni por una esquina del pad);
+   - el primer quiebre queda por fuera del pad: al menos 0,55 mm de pista recta (0,95 mm si el quiebre es de 90°);
+   - dos pistas de un mismo pad salen separadas 90° o 180°; si no caben, una se une a la otra en T a 90°.
+   Comprobado en los 61 pads que tienen pistas: 61 cumplen. Además: ninguna esquina de 90° (todas con chaflán a
+   45°), ningún escalón, y todos los tramos a 0°, 45° o 90°.
+   Cambios que se notan:
+   - J4.1, J4.5, U1.3, R8.1/R7.2, R6.2/C2.1, R3.1, R4.1, R4.2: ahora entran rectas.
+   - R3.2: solo le llega la pista de C5.1; la de J4.3 (AI) se une a esa pista en T, fuera del pad.
+   - J6.14 -> R1.1 (+3,3 V): sale horizontal de J6.14 y entra horizontal a R1.1, con un desvío corto en S a 45°.
+   - U1.5 -> R4.1: el escalón de 0,4 mm desapareció; la pista entra a R4.1 por arriba.
+   - Entre las filas del LM358 se reacomodaron VB (sale recta de U1.3 y baja entre U1.4 y U1.5) y FB (sube antes).
+   - C5.2 y W1.2 (GND) quedaron unidos al plano de GND por sus 4 radios, sin pista.
+4. El plano de GND ya no deja lenguas de cobre de menos de 1 mm (ancho mínimo del plano: 1,0 mm).
+5. Textos "v5". Lo de la v4 sigue: marco de corte de 0,3 mm en las 3 capas, fiducias en los 4 huecos M3, una capa.
+
+QUÉ SE MANDA AL LCFI: fabricacion/upmu_v5_1capa_gerbers_LCFI.zip
+   upmu_shield-B_Cu.gbl ............ cobre (cara de pistas, abajo) — con marco y fiducias
+   upmu_shield-B_Mask.gbs .......... máscara antisolder — con marco y fiducias
+   upmu_shield-F_Silkscreen.gto .... referencias (lado componentes) — con marco y fiducias rellenas
+   upmu_shield-Edge_Cuts.gm1 ....... contorno de la placa
+   upmu_shield.drl ................. perforación (formato arriba)
+   upmu_shield-listado_de_taladros.txt, upmu_shield-imagen_placa.png
+   Decir: "placa de UNA cara, FR4 1/0, cobre abajo, huecos sin metalizar, 10 x 8 cm".
+
+REGLAS DE DISEÑO (upmu_shield.kicad_dru)                LCFI   Nuestra
+  Ancho mínimo de pista                        0.254    0.60   se usan 0,8 (señal) y 1,2 (5 V, 3,3 V y GND)
+  Separación cobre-cobre (pistas, plano)       0.300    0.60
+  Separación pad-pad del mismo conector        0.500    0.50   fijada por el paso de 2,54 mm; lo real es ≥ 0,55 mm
+  Anillo de cobre alrededor del taladro        0.500    0.50   real: 0,55 a 0,9 mm
+  Taladro a cobre de otra red                  0.330    0.60
+  Taladro a taladro                            0.500    1.00
+  Diámetro mínimo de taladro                   0.600    0.80   0,8 componentes, 1,0 conectores, 3,2 tornillos
+  Cobre al borde de la placa                   0.500    1.50   (excepto el marco de corte, que va en el borde)
+  Separación del plano de GND                  0.508    0.80
+  DRC: 0 violaciones, 0 conexiones sin hacer (revision_DRC.txt). Verificación cruzada: verificacion.txt.
+
+SI VUELVES A EXPORTAR DESDE TU KICAD (9 o 10)
+- Archivo > Fabricación > Gerbers: capas B.Cu, B.Mask, F.Silkscreen, Edge.Cuts; marca "Usar el origen de
+  archivos de taladrado/colocación" (el origen ya está guardado en la esquina inferior izquierda).
+- Archivo de taladrado: Excellon; unidades PULGADAS; formato de ceros "Suprimir ceros a la izquierda";
+  origen "Origen de archivos de taladrado/colocación"; "PTH y NPTH en un solo archivo" ACTIVADO; sin mapa.
+- El proyecto está en formato KiCad 7: tu KiCad lo abre y lo convierte al guardar.
+
+MONTAJE, PRIMER ENCENDIDO Y FIRMWARE: igual que antes (W1 y W2 primero; VB, IOUT y AI ≈ 1,65 V; el firmware no
+cambia: PA0 corriente, PA4 tensión, PA1 PPS, PA9/PA10 GPS).
+
+SEGURIDAD: esta placa nunca lleva 120 V. La red va solo a la bornera del módulo ZMPT101B.

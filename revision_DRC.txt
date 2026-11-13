@@ -1,0 +1,36 @@
+REVISIÓN DE REGLAS (DRC) — Shield µPMU v5, una capa (segunda revisión del LCFI)
+==========================================================
+
+Reglas declaradas en upmu_shield.kicad_dru (KiCad las revisa solas con Inspeccionar > Comprobador de reglas):
+
+Regla                                           LCFI   Nuestra   Nota
+Ancho mínimo de pista                          0.254      0.60   se usan 0,8 (señal) y 1,2 (5 V, 3,3 V y GND)
+Separación cobre-cobre (pistas, plano)         0.300      0.60   el doble del mínimo
+Separación pad-pad del mismo conector          0.500      0.50   fijada por el paso de 2,54 mm; lo real es ≥ 0,54 mm
+Anillo de cobre alrededor del taladro          0.500      0.50   real: 0,55 a 0,8 mm (conectores 0,5 en el sentido de la fila)
+Taladro a cobre de otra red                    0.330      0.60   
+Taladro a taladro                              0.500      1.00   
+Diámetro mínimo de taladro                     0.600      0.80   0,8 componentes, 1,0 conectores, 3,2 montaje
+Cobre al borde de la placa                     0.500      1.50   
+Separación del plano de GND                    0.508      0.80   
+
+Además: sin vías, y en F.Cu solo los alambres de GND W1 y W2 (F.Cu no se fabrica).
+Marco de corte de 0,3 mm en B.Cu, B.Mask y F.Silkscreen: exento de la regla de borde (regla marco_de_corte).
+Sin esquinas de 90° en las pistas (chaflanes a 45°); fiducias rellenas en los 4 huecos M3 (cobre, máscara y serigrafía).
+Todas las pistas llegan rectas al centro de su pad (pads ovalados y cuadrados solo por los ejes).
+
+Resultado del DRC: 0 violaciones, 0 conexiones sin hacer.
+Avisos de biblioteca (lib_footprint_*): 0. Salen solo porque aquí no está la tabla de bibliotecas de KiCad; en tu KiCad, con fp-lib-table del proyecto, no deben salir.
+
+Informe completo de KiCad:
+----------------------------------------------------------
+** Drc report for /home/claude/upmu_shield_v5_1capa/upmu_shield.kicad_pcb **
+** Created on 2026-11-06 15:50:19 **
+
+** Found 0 DRC violations **
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **

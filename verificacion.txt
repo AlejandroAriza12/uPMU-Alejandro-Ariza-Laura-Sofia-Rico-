@@ -1,0 +1,39 @@
+OK     esquemático = definición del circuito (15 redes)
+OK     PCB = definición del circuito (15 redes)
+OK     J6 pin 12 (A0/PA0) -> ADC_I
+OK     J6 pin 9 (A3/PA4) -> ADC_V
+OK     J6 pin 11 (A1/PA1) -> PPS
+OK     J6 pin 4 (+5V) -> +5V
+OK     J6 pin 14 (+3V3) -> +3V3
+OK     J6 pin 2 (GND) -> GND
+OK     J5 pin 1 (D1/PA9) -> GPS_RX
+OK     J5 pin 2 (D0/PA10) -> GPS_TX
+OK     J5 pin 4 (GND) -> GND
+OK     J5: los otros 12 pines quedan sin conexión
+OK     J6: los otros 9 pines quedan sin conexión
+OK     separación entre filas del Nucleo = 15.24 mm (15,24 = lo que mediste: ≈1,5 cm)
+OK     paso entre pines = 2,54 mm
+OK     pin 1 a pin 15 = 35.56 mm (35,56 = tus 3,6 cm)
+OK     pin 1 (VIN/D1) y la etiqueta USB en el mismo extremo (arriba)
+OK     con el USB arriba: CN3 (digital) a la izquierda, CN4 (analógico) a la derecha
+OK     sin vías
+OK     en F.Cu solo los 2 alambres de GND (W1, W2): 2 trazos
+OK     plano de GND solo en B.Cu
+OK     pads de los componentes solo en B.Cu
+OK     pista más delgada 0.80 mm (nuestra 0.6, LCFI 0,254)
+OK     anillo de cobre mínimo 0.50 mm en J1.1 (nuestra 0.5, LCFI pads 0,5)
+OK     taladro mínimo 0.80 mm (nuestra 0.8, LCFI 0,6); usados: [0.8, 1.0, 3.2]
+OK     distancia mínima entre taladros 1.54 mm (nuestra 1.0, LCFI 0,5)
+OK     separación pad-pad mínima ≈ 0.55 mm entre ('J2.1', 'J2.2') (nuestra 0.5, LCFI 0,5)
+      placa: 100.0 x 80.0 mm, 163 trazos en B.Cu, 27 huellas
+
+RESULTADO: TODO OK
+
+ESQUINAS DE LAS PISTAS (B.Cu)
+163 segmentos en B.Cu
+[('135°', 109), ('T/union de 3', 6), ('90° (en pad)', 5)]
+esquinas <=90° fuera de pads: 0
+
+LLEGADA DE PISTAS A PADS
+pads con pistas: 61; llegan rectas al centro, sin tramos sueltos y con >= 90° entre pistas: 61
+pads que no cumplen: ninguno
